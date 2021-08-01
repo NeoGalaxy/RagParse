@@ -110,7 +110,6 @@ pub fn parse<'a>(args: &mut [&mut dyn arg::ArgTrait], opts: &mut [&mut dyn opt::
         TypeError(s) => panic!("TypeError: {}", s),
         NotEnoughArgs => panic!("NotEnoughArgs"),
         OptError => panic!("Unknown option"),
-        _ => panic!("Not supported")
     }
 }
 

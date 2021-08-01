@@ -44,3 +44,9 @@ impl ArgType for String {
 		"string"
 	}
 }
+
+impl ArgType for f64 {
+	fn name() -> &'static str {
+		"real"
+	}
+}
