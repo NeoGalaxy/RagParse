@@ -1,4 +1,4 @@
-# Naeio's Rust argparse
+# Naeio's Rust ArGument parser
 
 > This library is at a very early stage of development, and everything is experimental. Any feedback is would be appreciated !
 

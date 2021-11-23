@@ -1,13 +1,13 @@
 use crate::{arg::ArgTrait, opt::OptTrait};
 
-pub fn help<'a>(args: &mut [&mut dyn ArgTrait], opts: &mut [&mut dyn OptTrait], cmd: &str) -> String{
+pub fn help<'a>(args: &[&mut dyn ArgTrait], opts: &[&mut dyn OptTrait], cmd: &str) -> String{
 	let mut help_string = String::new();
 
 	/************************   Print Usage   ************************/
 
 	help_string.push_str(&format!("Usage:{}", cmd));
 	if opts.len() > 0 {
-		help_string.push_str(" [options]");
+		help_string.push_str(" [OPTIONS]");
 	}
 	for arg in args.iter() {
 		if arg.is_required() {

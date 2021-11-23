@@ -1,26 +1,14 @@
-use argparse::{arg::{Arg, ArgTrait},opt::{Opt, ValOpt, OptTrait}};
+use argparse::{arg, opt, parse_cmd};
 
 fn main() {
-    let data: Vec<String> = std::env::args().collect();
-
-    let mut name_arg: Arg<String> = Arg::new("name", "The name of the subject").optionnal();
-    let mut age_arg: Arg<i16> = Arg::new("age", "The age of the subject");
-    let mut weight_arg: Arg<f64> = Arg::new("weight", "The weight of the subject").optionnal();
+    let mut name_arg   = arg!(name? (String): "The name of the subject");
+    let mut age_arg    = arg!(age (i16): "The age of the subject");
+    let mut weight_arg = arg!(weight? (f64): "The weight of the subject");
     
-    let mut h_opt: Opt = Opt::new(&["h", "-help"], "Display the help");
-    let mut ro_opt: ValOpt<i32> = ValOpt::new(&["ro", "RO", "-random-option"], "A random option");
+    let mut h_opt      = opt!([h, "-help"]: "Display the help", invoke(help));
+    let mut ro_opt     = opt!([ro, RO, "-random-option"] i32: "A random option");
 
-    let helpcl; /* It has to outlive h_opt */
-    let all_args:&mut [&mut dyn ArgTrait] = &mut [&mut name_arg, &mut age_arg, &mut weight_arg];
-    {
-        let all_opts:&mut [&mut dyn OptTrait] = &mut [&mut h_opt, &mut ro_opt];
-        let ret = argparse::doc::help(all_args, all_opts, &data[0]);
-        helpcl = move || {println!("{}", ret); std::process::exit(0)};
-        h_opt.set_invoker(&helpcl);
-    }
-    let all_opts:&mut [&mut dyn OptTrait] = &mut [&mut h_opt, &mut ro_opt];
-
-    argparse::parse(all_args, all_opts, &data);
+    parse_cmd!([name_arg, age_arg, weight_arg] <h_opt, ro_opt>);
 
     match name_arg.get_opt() {
         Some(val) => println!("We are taking about the cat named {}.", val),
@@ -35,7 +23,8 @@ fn main() {
         Some(val) => println!(" and her weight is about {}kg.", val),
         None => println!("."),
     }
-    if ro_opt.is_invoked() {
-        println!("{}. Wow that was random.", ro_opt.get() * 3 - 1);
+    match ro_opt.get() {
+        Some(val) => println!("{}. Wow that was random.", val * 3 - 1),
+        None => (),
     }
 }
